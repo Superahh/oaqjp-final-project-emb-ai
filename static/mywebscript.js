@@ -1,12 +1,16 @@
-let RunSentimentAnalysis = ()=>{
-    textToAnalyze = document.getElementById("textToAnalyze").value;
-
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("system_response").innerHTML = xhttp.responseText;
+def emotion_detector(text_to_analyze):
+    url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
+    headers = {
+        'grpc-metadata-mm-model-id': 'emotion_aggregated-workflow_lang_en_stock',
+        'Content-Type': 'application/json'
+    }
+    input_json = {
+        "raw_document": {
+            "text": text_to_analyze
         }
-    };
-    xhttp.open("GET", "emotionDetector?textToAnalyze"+"="+textToAnalyze, true);
-    xhttp.send();
-}
+    }
+
+    response = requests.post(url, headers=headers, json=input_json)
+    
+    
+    return response.json()['text']
